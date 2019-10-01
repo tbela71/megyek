@@ -1,0 +1,54 @@
+﻿@page
+@model Megyek.Pages.Membership.EditModel
+
+@{
+    ViewData["Title"] = "Edit team member";
+}
+
+<h2>Edit</h2>
+@if (Model.Membership != null)
+{
+<b>Team : </b>@Html.DisplayFor(model => Model.Membership.Team.Name)
+<br>
+<b>User : </b>@Html.DisplayFor(model => Model.Membership.Person.UserName)
+<br>
+<h4>Membership</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Membership.TeamId" />
+            <input type="hidden" asp-for="Membership.PersonId" />
+            <div class="form-group">
+                <label asp-for="Membership.DisplayName" class="control-label"></label>
+                <input asp-for="Membership.DisplayName" class="form-control" />
+                <span asp-validation-for="Membership.DisplayName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Membership.Manager" class="control-label"></label>
+                <input asp-for="Membership.Manager" class="form-control" />
+                <span asp-validation-for="Membership.Manager"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Membership.Mail" class="control-label"></label>
+                <input asp-for="Membership.Mail" class="form-control" />
+                <span asp-validation-for="Membership.Mail"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+<div>
+    <a asp-page="MembershipIndex" asp-route-teamId="@Model.Membership.Team.Id">Back to List</a>
+</div>
+}
+else
+{
+<b>No permission to this team!</b>
+}
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

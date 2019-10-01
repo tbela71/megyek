@@ -1,0 +1,324 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Seleted event";
+}
+<style>
+    #imagewithcaption {
+        float: left;
+        width: 52px;
+        text-align: center;
+        font-size: x-small;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    span.cyan {
+        background-color: #b9edfb;
+        padding: 3px;
+        margin: 3px;
+        line-height: 1.8;
+    }
+
+    span.pink {
+        background-color: #f2cdcd;
+        padding: 3px;
+        margin: 3px;
+        line-height: 1.8;
+    }
+
+    span.green {
+        background-color: #a7e4c8;
+        padding: 3px;
+        margin: 3px;
+        line-height: 1.8;
+    }
+
+    span.grey {
+        background-color: #e0e0e0;
+        padding: 3px;
+        margin: 3px;
+        line-height: 1.8;
+    }
+</style>
+<hr>
+@if (Model.Me.Id != 0)
+{
+<table>
+    <tr>
+        <td style="width:100px"><b>User :</b></td>
+        <td>
+            @if (!string.IsNullOrEmpty(Model.Membership?.DisplayName))
+            {
+                <span class="cyan">
+                    @Html.DisplayFor(model => model.Membership.DisplayName)
+                </span>
+            }
+        </td>
+        <td style="width:100px">
+            @if (!string.IsNullOrEmpty(Model.Membership?.DisplayName))
+            {
+                <form asp-page-handler="Mail" method="post">
+                    Mail:
+                    @if (Model.Membership.Mail)
+                    {
+                        <button class="btn btn-default" style="background-color: #a7e4c8; border:solid; border-width:1px;">On</button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-default" style="background-color: #f2cdcd; border:solid; border-width:1px;">Off</button>
+                    }
+                    <input type="hidden" name="teamId" value="@Model.Team?.Id" />
+                    <input type="hidden" name="eventId" value="@Model.Event?.Id" />
+                </form>
+            }
+        </td>
+    </tr>
+    <tr>
+        <td><b>Team :</b></td>
+        <td>
+            @if (!string.IsNullOrEmpty(Model.Team.Name))
+            {
+                <span class="cyan">
+                    @Html.DisplayFor(model => model.Team.Name)
+                </span>
+            }
+        </td>
+        <td style="width:100px; align-content:center;">
+            @if (Model.Membership?.Manager ?? false)
+            {
+                <a asp-page="EventIndex" asp-route-teamId="@Model.Team.Id"> Events </a>
+                <a asp-page="MembershipIndex" asp-route-teamId="@Model.Team.Id"> Members </a>
+            }
+        </td>
+    </tr>
+    @if (Model.MyTeams.Count > 1)
+    {
+        <tr>
+            <td colspan="3">
+                @foreach (var item in Model.MyTeams)
+                {
+                    if (item.Id != Model.Team.Id)
+                    {
+                        <span class="grey">
+                            <a asp-page="./Index" asp-route-teamId="@item.Id">@item.Name</a>
+                        </span>
+                    }
+                }
+            </td>
+        </tr>
+    }
+</table>
+}
+else
+{
+<p>Please log in or register!</p>
+}
+@if (Model.Event != null)
+{
+    <hr>
+    <table>
+        <tr>
+            <td style="width:100px"><b>Event :</b></td>
+            <td>
+                <span class="cyan">
+                    @Model.Event.Description
+                </span>
+                <span class="cyan">
+                    @Html.DisplayFor(model => model.Event.DisplayDate)
+                </span>
+                <span class="cyan">
+                    @Html.DisplayFor(model => model.Event.Place)
+                </span>
+            </td>
+        </tr>
+        @if (Model.NextEvents.Count > 0)
+        {
+            <tr>
+                <td colspan="2">
+                    @foreach (var item in Model.NextEvents)
+                    {
+                        <span class="grey">
+                            <a asp-page="./Index" asp-route-eventId="@item.Id">@item.Description</a>
+                        </span>
+                        @:
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    @foreach (var item in Model.SpecialEvents)
+                    {
+                        <span class="grey">
+                            <a asp-page="./Index" asp-route-eventId="@item.Id">@item.Description</a>
+                        </span>
+                        @:
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+    <hr>
+    <table>
+        <tr>
+            <td style="width:100px;"><b>Going (@Html.DisplayFor(model => model.GoingCount)):</b></td>
+            <td>
+                @foreach (var item in Model.Event.Participation.OrderBy(x => x.Date))
+                {
+                    if (item.Participate ?? false)
+                    {
+                        <span class="green">
+                            @if (Model.Membership?.Manager ?? false)
+                            {
+                                <a asp-page-handler="Skipping" method="post" asp-route-eventId="@Model.Event.Id" asp-route-personId="@item.PersonId">@Model.GetParticipationDisplayNameX(item)</a>
+                            }
+                            else
+                            {
+                                @Model.GetParticipationDisplayNameX(item)
+                            }
+                        </span>
+                    }
+                }
+            </td>
+        </tr>
+        <tr>
+            <td style="width:100px;"><b>Skipping (@Html.DisplayFor(model => model.SkippingCount)):</b></td>
+            <td>
+                @foreach (var item in Model.Event.Participation.OrderBy(x => x.Date))
+                {
+                    if (!(item.Participate ?? true))
+                    {
+                        <span class="pink">
+                            @if (Model.Membership?.Manager ?? false)
+                            {
+                                <a asp-page-handler="Going" method="post" asp-route-eventId="@Model.Event.Id" asp-route-personId="@item.PersonId">@Model.GetParticipationDisplayNameX(item)</a>
+                            }
+                            else
+                            {
+                                @Model.GetParticipationDisplayNameX(item)
+                            }
+                        </span>
+                    }
+                }
+            </td>
+        </tr>
+        <tr>
+            <td style="width:100px;"><b>Unknown :</b></td>
+            <td>
+                @foreach (var item in Model.Team.Membership.Where(x => !Model.Event.Participation.Where(y => y.PersonId == x.PersonId).Any()))
+                {
+                    <span class="grey">
+                        @if (Model.Membership?.Manager ?? false)
+                        {
+                            <a asp-page-handler="Going" method="post" asp-route-eventId="@Model.Event.Id" asp-route-personId="@item.PersonId">@item.DisplayNameX</a>
+                        }
+                        else
+                        {
+                            @item.DisplayNameX
+                        }
+                    </span>
+                }
+            </td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            @if (!(Model.Participate ?? false))
+            {
+                <td style="width:100px;">
+                    <form asp-page-handler="Going" method="post">
+                        <button class="btn btn-default" style="background-color: #a7e4c8; border:solid; border-width:1px;">Going</button>
+                        <input type="hidden" name="eventId" value="@Model.Event?.Id" />
+                    </form>
+                </td>
+            }
+            @if (Model.Participate ?? true)
+            {
+                <td style="width:100px;">
+                    <form asp-page-handler="Skipping" method="post">
+                        <button class="btn btn-default" style="background-color: #f2cdcd; border:solid; border-width:1px;">Skipping</button>
+                        <input type="hidden" name="eventId" value="@Model.Event?.Id" />
+                    </form>
+                </td>
+            }
+            @if (Model.Participation != null)
+            {
+                <td>@Model.GetParticipationDisplayText()</td>
+            }
+            else
+            {
+                <td> </td>
+            }
+            <td style="width:100px">
+                @if (Model.Event?.IsAlertAllowed ?? false)
+                {
+                    <form asp-page-handler="Alert" method="post">
+                        Alert:<button class="btn btn-default" style="background-color: #a7e4c8; border:solid; border-width:1px;">Send</button>
+                        <input type="hidden" name="teamId" value="@Model.Team?.Id" />
+                        <input type="hidden" name="eventId" value="@Model.Event?.Id" />
+                    </form>
+                }
+                else
+                {
+                    @Model.Event.LastAlertSentAsText;
+                }
+            </td>
+        </tr>
+    </table>
+}
+@if (Model.Team.Id != 0)
+{
+    <hr>
+    <table>
+        <tr>
+            <td>
+                <form asp-page-handler="Posting" method="post" style="display: flex; align-items: center">
+                    <button class="btn btn-default">+</button>
+                    <textarea name="postText" cols="40" rows="3" maxlength="4000" style="resize: none;"></textarea>
+                    <input type="hidden" name="teamId" value="@Model.Team?.Id" />
+                    <input type="hidden" name="eventId" value="@Model.Event?.Id" />
+                </form>
+            </td>
+        </tr>
+    </table>
+    <table class="table-striped">
+        @foreach (var item in Model.Posts)
+        {
+            <tr>
+                <td style="width:160px">
+                    <b>@Html.DisplayFor(modelItem => item.DisplayName)</b>
+                    <br>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                @if (item.Id == Model.MyLastPost?.Id)
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Text)
+                    </td>
+                    <td style="width:50px">
+                        <form asp-page-handler="DeletePost" method="post">
+                            <button class="btn btn-default">X</button>
+                            <input type="hidden" name="postId" value="@item.Id" />
+                            <input type="hidden" name="teamId" value="@Model.Team?.Id" />
+                            <input type="hidden" name="eventId" value="@Model.Event?.Id" />
+                        </form>
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Text)
+                    </td>
+                }
+            </tr>
+        }
+    </table>
+    @if (Model.Posts.Count >= 50)
+    {
+        <hr>
+        <a asp-page="PostIndex" asp-route-teamId="@Model.Team.Id">Full post history</a>
+    }
+}
+

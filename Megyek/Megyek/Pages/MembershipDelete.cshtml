@@ -1,0 +1,58 @@
+﻿@page
+@model Megyek.Pages.Membership.DeleteModel
+
+@{
+    ViewData["Title"] = "Delete team member";
+}
+
+<h2>Delete</h2>
+@if (Model.Membership != null)
+{
+    <b>Team : </b>@Html.DisplayFor(model => Model.Membership.Team.Name)
+
+    <h3>Are you sure you want to delete this?</h3>
+    <div>
+        <h4>Membership</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Membership.Person.UserName)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Membership.Person.UserName)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Membership.DisplayName)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Membership.DisplayName)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Membership.Manager)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Membership.Manager)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Membership.Mail)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Membership.Mail)
+            </dd>
+        </dl>
+
+        <form method="post">
+            <input type="hidden" asp-for="Membership.TeamId" />
+            <input type="hidden" asp-for="Membership.PersonId" />
+            <input type="submit" value="Delete" class="btn btn-default" />
+        </form>
+    </div>
+    <div>
+        <a asp-page="MembershipIndex" asp-route-teamId="@Model.Membership.Team.Id">Back to List</a>
+    </div>
+}
+else
+{
+    <b>No permission to this team!</b>
+}
+

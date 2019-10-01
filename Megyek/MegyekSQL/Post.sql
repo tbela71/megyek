@@ -1,0 +1,11 @@
+﻿CREATE TABLE [dbo].[Post]
+(
+	[Id] INT IDENTITY(1,1) NOT NULL
+	,[TeamId] INT NOT NULL 
+	,[PersonId] INT NOT NULL 
+	,[Date] DATETIME NOT NULL
+	,[Text] nvarchar(4000) NOT NULL
+	,CONSTRAINT PK_Post PRIMARY KEY (Id)
+	,CONSTRAINT FK_Post_Person FOREIGN KEY ([PersonId]) REFERENCES [Person]([Id])
+	,CONSTRAINT FK_Post_Team FOREIGN KEY (TeamId) REFERENCES [Team]([Id])
+)

@@ -1,0 +1,68 @@
+﻿@page
+@model Megyek.Pages.Event.IndexModel
+
+@{
+    ViewData["Title"] = "Event list";
+}
+
+<h2>Events</h2>
+
+@if (Model.Team.Id > 0)
+{
+    <p>
+        <b>Team : </b>@Html.DisplayFor(model => Model.Team.Name)
+        @if (Model.Team.Id > 0)
+        {
+            @:&nbsp;| &nbsp;
+            <a asp-page="EventCreate" asp-route-teamId="@Model.Team.Id">Create New</a>
+        }
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Event[0].Date)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Event[0].Description)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Event[0].Place)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Event[0].Special)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Event)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DisplayDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Place)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Special)
+                </td>
+                <td>
+                    <a asp-page="Index" asp-route-eventId="@item.Id">Show</a> |
+                    <a asp-page="EventEdit" asp-route-id="@item.Id">Edit</a> |
+                    <!-- <a asp-page="EventDetails" asp-route-id="@item.Id">Details</a> | -->
+                    <a asp-page="EventDelete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <b>No permission to any team!</b>
+}

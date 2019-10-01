@@ -1,0 +1,66 @@
+﻿@page
+@model Megyek.Pages.Membership.IndexModel
+
+@{
+    ViewData["Title"] = "Team members list";
+}
+
+<h2>Members</h2>
+
+@if (Model.Team.Id > 0)
+{
+    <p>
+        <b>Team : </b>@Html.DisplayFor(model => Model.Team.Name)
+        @if (Model.Team.Id > 0)
+        {
+            @:&nbsp;| &nbsp;
+            <a asp-page="MembershipCreate" asp-route-teamId="@Model.Team.Id">Invite New Member</a>
+        }
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Membership[0].Person.UserName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Membership[0].DisplayName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Membership[0].Manager)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Membership[0].Mail)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Membership)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Person.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DisplayName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Manager)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Mail)
+                </td>
+                <td>
+                    <a asp-page="MembershipEdit" asp-route-personId="@item.PersonId" asp-route-teamId="@item.TeamId">Edit</a> |
+                    <a asp-page="MembershipDelete" asp-route-personId="@item.PersonId" asp-route-teamId="@item.TeamId">Delete</a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <b>No permission to any team!</b>
+}

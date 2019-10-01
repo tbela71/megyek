@@ -1,0 +1,45 @@
+﻿@page
+@model Megyek.Pages.Event.DetailsModel
+
+@{
+    ViewData["Title"] = "Event details";
+}
+
+<h2>Details</h2>
+@if (Model.Event != null)
+{
+    <b>Team : </b>@Html.DisplayFor(model => Model.Event.Team.Name)
+    <div>
+        <h4>Event</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Event.Date)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Event.DisplayDate)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Event.Description)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Event.Description)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Event.Place)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Event.Place)
+            </dd>
+        </dl>
+    </div>
+    <a asp-page="EventEdit" asp-route-id="@Model.Event.Id">Edit</a>
+    <br>
+    <div>
+        <a asp-page="EventIndex" asp-route-teamId="@Model.Event.Team.Id">Back to List</a>
+    </div>
+}
+else
+{
+    <b>No permission to this team!</b>
+}

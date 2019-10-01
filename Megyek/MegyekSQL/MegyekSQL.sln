@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29201.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "MegyekSQL", "MegyekSQL.sqlproj", "{C3982520-C6EA-4537-8C98-00FA24C2D294}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C3982520-C6EA-4537-8C98-00FA24C2D294}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3982520-C6EA-4537-8C98-00FA24C2D294}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3982520-C6EA-4537-8C98-00FA24C2D294}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{C3982520-C6EA-4537-8C98-00FA24C2D294}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3982520-C6EA-4537-8C98-00FA24C2D294}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3982520-C6EA-4537-8C98-00FA24C2D294}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D6EFD9D8-1645-4B61-ADB8-CE0B8D5983B3}
+	EndGlobalSection
+EndGlobal
